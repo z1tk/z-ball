@@ -16,7 +16,6 @@ const shootAudio = new Audio('./audio/shoot.mp3')
 const enemyHitAudio = new Audio('./audio/enemyHit.mp3')
 const enemyEliminatedAudio = new Audio('./audio/enemyEliminated.mp3')
 const obtainPowerUpAudio = new Audio('./audio/obtainPowerUp.mp3')
-const highscore = getCookie("higscore")
 const backgroundMusicAudio = new Audio('./audio/musicccc.mp3')
 backgroundMusicAudio.loop = true
 
@@ -504,13 +503,6 @@ function animate() {
           score += 100
           scoreEl.innerHTML = score
           createScoreLabel(projectile, 100)
-          if (highscore != "") {
-            if (highscore < score) {
-              setCookie("highscore", score, 60)
-            }
-          } else {
-            setCookie("highscore", score, 60)
-          }
 
           gsap.to(enemy, {
             radius: enemy.radius - 10
@@ -526,13 +518,6 @@ function animate() {
           score += 250
           scoreEl.innerHTML = score
           createScoreLabel(projectile, 250)
-          if (highscore != "") {
-            if (highscore < score) {
-              setCookie("highscore", score, 60)
-            }
-          } else {
-            setCookie("highscore", score, 60)
-          }
 
           // change backgroundParticle colors
           backgroundParticles.forEach((backgroundParticle) => {
@@ -695,12 +680,17 @@ function getCookie(cname) {
 
   function checkCookie() {
     setTimeout(() => {
+      let highscore = getCookie("highscore")
       if (highscore != "") {
-        highScoreEl.innerHTML = "HighScore: " + highscore;
-        bigHighScoreEl.innerHTML = highscore;
+        if (score > highscore) {
+          setCookie("highscore", score, 60)
+          highScoreEl.innerHTML = "HighScore: " + highscore
+          bigHighScoreEl.innerHTML = highscore
+        }
       } else {
-        highScoreEl.innerHTML = 0;
-        bigHighScoreEl.innerHTML = 0;
+        setCookie("highscore", 0, 60)
+        highScoreEl.innerHTML = 0
+        bigHighScoreEl.innerHTML = 0
       }
-    }, 100)
+    })
   }
