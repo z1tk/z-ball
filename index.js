@@ -683,19 +683,20 @@ function getCookie(cname) {
   }
 
   function checkCookie() {
-    setTimeout(() => {
       let highscore = getCookie("highscore")
       if (highscore != "") {
         if (score > highscore) {
           setCookie("highscore", score, 60)
         }
-        highScoreEl.innerHTML = highscore
-        bigHighScoreEl.innerHTML = highscore
       } else {
         setCookie("highscore", 0, 60)
         highScoreEl.innerHTML = 0
         bigHighScoreEl.innerHTML = 0
       }
-    }, 100)
   }
 
+for (var i = 0; i < Infinity; i++) {
+  let highscore = getCookie("highscore")
+  highScoreEl.innerHTML = highscore
+  bigHighScoreEl.innerHTML = highscore
+}
