@@ -8,13 +8,15 @@ const scoreEl = document.querySelector('#scoreEl')
 const startGameBtn = document.querySelector('#startGameBtn')
 const modalEl = document.querySelector('#modalEl')
 const bigScoreEl = document.querySelector('#bigScoreEl')
-
+const bigHighScoreEl = document.querySelector("#bigHighScoreEl")
+const highScoreEl = document.querySelector("#highScoreEl")
 const startGameAudio = new Audio('./audio/startGame.mp3')
 const endGameAudio = new Audio('./audio/endGame.mp3')
 const shootAudio = new Audio('./audio/shoot.mp3')
 const enemyHitAudio = new Audio('./audio/enemyHit.mp3')
 const enemyEliminatedAudio = new Audio('./audio/enemyEliminated.mp3')
 const obtainPowerUpAudio = new Audio('./audio/obtainPowerUp.mp3')
+const highscore = getCookie("higscore")
 const backgroundMusicAudio = new Audio('./audio/musicccc.mp3')
 backgroundMusicAudio.loop = true
 
@@ -501,8 +503,16 @@ function animate() {
           // increase our score
           score += 100
           scoreEl.innerHTML = score
-
           createScoreLabel(projectile, 100)
+          if (highscore != "") {
+            if (highscore < score) {
+              setCookie("highscore", score, 60)
+              checkCookie()
+            }
+          } else {
+            setCookie("highscore", score, 60)
+            checkCookie()
+          }
 
           gsap.to(enemy, {
             radius: enemy.radius - 10
@@ -518,6 +528,15 @@ function animate() {
           score += 250
           scoreEl.innerHTML = score
           createScoreLabel(projectile, 250)
+          if (highscore != "") {
+            if (highscore < score) {
+              setCookie("highscore", score, 60)
+              checkCookie()
+            }
+          } else {
+            setCookie("highscore", score, 60)
+            checkCookie()
+          }
 
           // change backgroundParticle colors
           backgroundParticles.forEach((backgroundParticle) => {
@@ -654,3 +673,36 @@ addEventListener('keydown', ({ keyCode }) => {
       break
   }
 })
+
+function setCookie(cname, cvalue, exdays) {
+	const d = new Date();
+	d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	let expires = "expires=" + d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+	let name = cname + "=";
+	let decodedCookie = decodeURIComponent(document.cookie);
+	let ca = decodedCookie.split(';');
+	for(let i = 0; i < ca.length; i++) {
+	  let c = ca[i];
+	  while (c.charAt(0) == ' ') {
+		c = c.substring(1);
+	  }
+	  if (c.indexOf(name) == 0) {
+		return c.substring(name.length, c.length);
+	  }
+	}
+	return "";
+  }
+
+  function checkCookie() {
+    if (highscore != "") {
+      highScoreEl.innerHTML = highscore;
+      bigHighScoreEl.innerHTML = highscore;
+    } else {
+      highScoreEl.innerHTML = 0;
+      bigHighScoreEl.innerHTML = 0;
+    }
+  }
