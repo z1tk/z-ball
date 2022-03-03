@@ -687,18 +687,12 @@ function getCookie(cname) {
       if (highscore != "") {
         if (score > highscore) {
           setCookie("highscore", score, 60)
-        }
+        } 
+        highScoreEl.innerHTML = getCookie("highscore")
+        bigHighScoreEl.innerHTML = getCookie("highscore")
       } else {
         setCookie("highscore", 0, 60)
         highScoreEl.innerHTML = 0
         bigHighScoreEl.innerHTML = 0
       }
   }
-
-for (var i = 0; i < Infinity; i++) {
-  setTimeout(() => {
-    let highscore = getCookie("highscore")
-    highScoreEl.innerHTML = highscore
-    bigHighScoreEl.innerHTML = highscore
-  }, 600)
-}
