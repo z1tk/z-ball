@@ -504,7 +504,7 @@ function animate() {
           scoreEl.innerHTML = score
           createScoreLabel(projectile, 100)
 
-          checkCookie(100)
+          checkCookie()
 
           gsap.to(enemy, {
             radius: enemy.radius - 10
@@ -521,7 +521,7 @@ function animate() {
           scoreEl.innerHTML = score
           createScoreLabel(projectile, 250)
 
-          checkCookie(250)
+          checkCookie()
 
           // change backgroundParticle colors
           backgroundParticles.forEach((backgroundParticle) => {
@@ -682,17 +682,20 @@ function getCookie(cname) {
 	return "";
   }
 
-  function checkCookie(n) {
-    let highscore = getCookie("highscore")
-    if (highscore != "") {
-      if (score > highscore) {
-        setCookie("highscore", scoreEl.innerHTML, 60)
+  function checkCookie() {
+    setTimeout(() => {
+      let highscore = getCookie("highscore")
+      if (highscore != "") {
+        if (score > highscore) {
+          setCookie("highscore", score, 60)
+        }
+        highScoreEl.innerHTML = highscore
+        bigHighScoreEl.innerHTML = highscore
+      } else {
+        setCookie("highscore", 0, 60)
+        highScoreEl.innerHTML = 0
+        bigHighScoreEl.innerHTML = 0
       }
-      highScoreEl.innerHTML = highscore
-      bigHighScoreEl.innerHTML = highscore
-    } else {
-      setCookie("highscore", 0, 60)
-      highScoreEl.innerHTML = 0
-      bigHighScoreEl.innerHTML = 0
-    }
+    }, 100)
   }
+
