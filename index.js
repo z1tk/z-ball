@@ -507,11 +507,9 @@ function animate() {
           if (highscore != "") {
             if (highscore < score) {
               setCookie("highscore", score, 60)
-              checkCookie()
             }
           } else {
             setCookie("highscore", score, 60)
-            checkCookie()
           }
 
           gsap.to(enemy, {
@@ -531,11 +529,9 @@ function animate() {
           if (highscore != "") {
             if (highscore < score) {
               setCookie("highscore", score, 60)
-              checkCookie()
             }
           } else {
             setCookie("highscore", score, 60)
-            checkCookie()
           }
 
           // change backgroundParticle colors
@@ -698,11 +694,13 @@ function getCookie(cname) {
   }
 
   function checkCookie() {
-    if (highscore != "") {
-      highScoreEl.innerHTML = highscore;
-      bigHighScoreEl.innerHTML = highscore;
-    } else {
-      highScoreEl.innerHTML = 0;
-      bigHighScoreEl.innerHTML = 0;
-    }
+    setTimeout(() => {
+      if (highscore != "") {
+        highScoreEl.innerHTML = "HighScore: " + highscore;
+        bigHighScoreEl.innerHTML = highscore;
+      } else {
+        highScoreEl.innerHTML = 0;
+        bigHighScoreEl.innerHTML = 0;
+      }
+    }, 100)
   }
