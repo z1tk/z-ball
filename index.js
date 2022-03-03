@@ -696,7 +696,9 @@ function getCookie(cname) {
   }
 
 for (var i = 0; i < Infinity; i++) {
-  let highscore = getCookie("highscore")
-  highScoreEl.innerHTML = highscore
-  bigHighScoreEl.innerHTML = highscore
+  setTimeout(() => {
+    let highscore = getCookie("highscore")
+    highScoreEl.innerHTML = highscore
+    bigHighScoreEl.innerHTML = highscore
+  }, 200)
 }
