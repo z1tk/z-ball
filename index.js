@@ -687,9 +687,9 @@ function getCookie(cname) {
     if (highscore != "") {
       if (score > highscore) {
         setCookie("highscore", score, 60)
-        highScoreEl.innerHTML = "HighScore: " + highscore
-        bigHighScoreEl.innerHTML = highscore
       }
+      highScoreEl.innerHTML = highscore
+      bigHighScoreEl.innerHTML = highscore
     } else {
       setCookie("highscore", 0, 60)
       highScoreEl.innerHTML = 0
