@@ -30,7 +30,35 @@
         >
           Start Game
         </button>
+        <br><br>
+        <button
+        class="bg-blue-500 text-white w-full py-3 rounded-full text-sm"
+        id="settingsBtn"
+      >
+        Settings
+      </button>
       </div>
+    </div>
+  </div>
+  <div style="display: none;" class="fixed inset-0 flex items-center justify-center" id="settingsModalEl">
+    <div id="settingsWhiteModalEl" class="bg-white max-w-md w-full p-6 text-center">
+        <label for="gq">Graphics Quality: </label>
+        <select name="gq" id="gq">
+          <option id="low">Low</option>
+          <option id="medium">Medium</option>
+          <option id="high" selected>High</option>
+        </select>
+        <br>
+        <label for="ic">Invert Controls: </label>
+        <input type="checkbox" id="ic" name="ic">
+        <br>
+        <label for="m">Music: </label>
+        <input type="checkbox" id="m" name="m" checked>
+        <br>
+        <label for="sfx">SFX: </label>
+        <input type="checkbox" id="sfx" name="sfx" checked>
+        <br><br>
+        <button onclick="changeSettings()" class="bg-blue-500 text-white w-full py-3 rounded-full text-sm">Done!</button>
     </div>
   </div>
   
