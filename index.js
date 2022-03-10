@@ -359,14 +359,14 @@ function spawnPowerUps() {
   powerUps.push(new PowerUp(x, y, velocity))
 }
 
-function createScoreLabel(projectile, score) {
+function createScoreLabel(obj, val) {
   const scoreLabel = document.createElement('label')
-  scoreLabel.innerHTML = score
+  scoreLabel.innerHTML = val
   scoreLabel.style.position = 'absolute'
   scoreLabel.style.color = 'white'
   scoreLabel.style.userSelect = 'none'
-  scoreLabel.style.left = projectile.x
-  scoreLabel.style.top = projectile.y
+  scoreLabel.style.left = obj.x
+  scoreLabel.style.top = obj.y
   document.body.appendChild(scoreLabel)
 
   gsap.to(scoreLabel, {
@@ -442,20 +442,39 @@ function animate() {
     const dist = Math.hypot(player.x - powerUp.x, player.y - powerUp.y)
 
     // obtain power up
-    // gain the automatic shooting ability
+
     if (dist - player.radius - powerUp.width / 2 < 1) {
-      player.color = '#FFF500'
-      player.powerUp = 'Automatic'
-      powerUps.splice(index, 1)
-
-      if (sfx.checked) {
-        obtainPowerUpAudio.cloneNode().play()
+      let p = (Math.floor(Math.random() * 2) == 0)
+      
+      if (p) {
+        createScoreLabel(player, 'Obtained Automatic Power!')
+        player.powerUp = 'Automatic'
+        player.color = 'yellow'
+        powerUps.splice(index, 1)
+  
+        if (sfx.checked) {
+          obtainPowerUpAudio.cloneNode().play()
+        }
+  
+        setTimeout(() => {
+          player.powerUp = null
+          player.color = '#FFFFFF'
+        }, 5000)
+      } else {
+        createScoreLabel(player, 'Obtained One Shot Power!')
+        player.color = 'red'
+        player.powerUp = 'One Shot'
+        powerUps.splice(index, 1)
+  
+        if (sfx.checked) {
+          obtainPowerUpAudio.cloneNode().play()
+        }
+  
+        setTimeout(() => {
+          player.powerUp = null
+          player.color = '#FFFFFF'
+        }, 5000)
       }
-
-      setTimeout(() => {
-        player.powerUp = null
-        player.color = '#FFFFFF'
-      }, 5000)
     } else {
       powerUp.update()
     }
@@ -526,7 +545,7 @@ function animate() {
         }
 
         // shrink enemy
-        if (enemy.radius - 10 > 5) {
+        if (enemy.radius - 10 > 5 && player.powerUp != 'One Shot') {
           if (sfx.checked) {
             enemyHitAudio.cloneNode().play()
           }
@@ -576,6 +595,9 @@ function animate() {
             })
 
             if (enemyFound) {
+              enemies.splice(index, 1)
+              projectiles.splice(projectileIndex, 1)
+            } else if (player.powerUp === 'One Shot') {
               enemies.splice(index, 1)
               projectiles.splice(projectileIndex, 1)
             }
@@ -628,7 +650,12 @@ addEventListener('click', ({ clientX, clientY }) => {
   if (scene.active && player.powerUp !== 'Automatic') {
     mouse.x = clientX
     mouse.y = clientY
-    player.shoot(mouse)
+
+    if (player.powerUp === 'One Shot') {
+      player.shoot(mouse, 'red')
+    } else {
+      player.shoot(mouse)
+    }
   }
 })
 
@@ -804,4 +831,3 @@ gsap.to('#whiteModalEl', {
   })
 
 }
-
