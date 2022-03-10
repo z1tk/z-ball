@@ -19,6 +19,15 @@ const obtainPowerUpAudio = new Audio('./audio/obtainPowerUp.mp3')
 const backgroundMusicAudio = new Audio('./audio/musicccc.mp3')
 backgroundMusicAudio.loop = true
 
+let icb = document.getElementById("ic")
+let gq = "Medium"
+let settings = document.getElementById("settingsBtn")
+let l = document.getElementById("low")
+let m = document.getElementById("medium")
+let h = document.getElementById("high")
+let mc = document.getElementById("m")
+let sfx = document.getElementById("sfx")
+
 const scene = {
   active: false
 }
@@ -75,7 +84,9 @@ class Player {
       y: Math.sin(angle) * 5
     }
     projectiles.push(new Projectile(this.x, this.y, 5, color, velocity))
-    shootAudio.cloneNode().play()
+    if (sfx.checked) {
+      shootAudio.cloneNode().play()
+    }
   }
 }
 
@@ -285,9 +296,17 @@ function init() {
   particles = []
   backgroundParticles = []
 
-  for (let x = 0; x < canvas.width; x += 30) {
-    for (let y = 0; y < canvas.height; y += 30) {
-      backgroundParticles.push(new BackgroundParticle(x, y, 3, 'blue'))
+  if(m.selected) {
+    for (let x = 0; x < canvas.width; x += 30) {
+      for (let y = 0; y < canvas.height; y += 30) {
+        backgroundParticles.push(new BackgroundParticle(x, y, 3, 'blue'))
+      }
+    }
+  } else if (h.selected) {
+    for (let x = 0; x < canvas.width; x += 30) {
+      for (let y = 0; y < canvas.height; y += 30) {
+        backgroundParticles.push(new BackgroundParticle(x, y, 3, 'blue'))
+      }
     }
   }
 }
@@ -366,9 +385,13 @@ let frame = 0
 function animate() {
   animationId = requestAnimationFrame(animate)
   frame++
-  c.fillStyle = 'rgba(0, 0, 0, 0.1)'
+  if (h.selected) {
+    c.fillStyle = 'rgb(0, 0, 0, 0.1)'
+  } else {
+    c.fillStyle = 'black'
+  }
   c.fillRect(0, 0, canvas.width, canvas.height)
-
+  
   if (frame % 70 === 0) spawnEnemies()
   if (frame % 300 === 0) spawnPowerUps()
 
@@ -425,7 +448,9 @@ function animate() {
       player.powerUp = 'Automatic'
       powerUps.splice(index, 1)
 
-      obtainPowerUpAudio.cloneNode().play()
+      if (sfx.checked) {
+        obtainPowerUpAudio.cloneNode().play()
+      }
 
       setTimeout(() => {
         player.powerUp = null
@@ -462,7 +487,9 @@ function animate() {
       cancelAnimationFrame(animationId)
       modalEl.style.display = 'flex'
       bigScoreEl.innerHTML = score
-      endGameAudio.play()
+      if (sfx.checked) {
+        endGameAudio.cloneNode().play()
+      }
       scene.active = false
 
       gsap.to('#whiteModalEl', {
@@ -480,24 +507,29 @@ function animate() {
       // when projectiles touch enemy
       if (dist - enemy.radius - projectile.radius < 0.03) {
         // create explosions
-        for (let i = 0; i < enemy.radius * 2; i++) {
-          particles.push(
-            new Particle(
-              projectile.x,
-              projectile.y,
-              Math.random() * 2,
-              enemy.color,
-              {
-                x: (Math.random() - 0.5) * (Math.random() * 6),
-                y: (Math.random() - 0.5) * (Math.random() * 6)
-              }
+
+        if (h.selected) {
+          for (let i = 0; i < enemy.radius * 2; i++) {
+            particles.push(
+              new Particle(
+                projectile.x,
+                projectile.y,
+                Math.random() * 2,
+                enemy.color,
+                {
+                  x: (Math.random() - 0.5) * (Math.random() * 6),
+                  y: (Math.random() - 0.5) * (Math.random() * 6)
+                }
+              )
             )
-          )
+          }
         }
 
         // shrink enemy
         if (enemy.radius - 10 > 5) {
-          enemyHitAudio.cloneNode().play()
+          if (sfx.checked) {
+            enemyHitAudio.cloneNode().play()
+          }
 
           // increase our score
           score += 100
@@ -513,7 +545,9 @@ function animate() {
           }, 0)
         } else {
           // eliminate enemy
-          enemyEliminatedAudio.cloneNode().play()
+          if (sfx.checked) {
+            enemyEliminatedAudio.cloneNode().play()
+          }
 
           // remove from scene altogether
           score += 250
@@ -608,13 +642,17 @@ addEventListener('resize', () => {
 startGameBtn.addEventListener('click', () => {
   init()
   animate()
-  startGameAudio.play()
+  if (sfx.checked) {
+    startGameAudio.cloneNode().play()
+  }
   scene.active = true
 
   score = 0
   scoreEl.innerHTML = score
   bigScoreEl.innerHTML = score
-  backgroundMusicAudio.play()
+  if (mc.checked) {
+    backgroundMusicAudio.play()
+  }
 
   gsap.to('#whiteModalEl', {
     opacity: 0,
@@ -627,33 +665,83 @@ startGameBtn.addEventListener('click', () => {
   })
 })
 
+settings.addEventListener('click', () => {
+  let settingsModalEl = document.getElementById("settingsModalEl")
+  gsap.to('#whiteModalEl', {
+    opacity: 0,
+    scale: 0.75,
+    duration: 0.25,
+    ease: 'expo.in',
+    onComplete: () => {
+      modalEl.style.display = 'none'
+    }
+  })
+  settingsModalEl.style.display = "flex"
+  gsap.to('#settingsWhiteModalEl', {
+    opacity: 1,
+    scale: 1,
+    duration: 0.45,
+    ease: 'expo'
+  })
+})
+
 addEventListener('keydown', ({ keyCode }) => {
-  if (keyCode === 87) {
-    player.velocity.y -= 1
-  } else if (keyCode === 65) {
-    player.velocity.x -= 1
-  } else if (keyCode === 83) {
-    player.velocity.y += 1
-  } else if (keyCode === 68) {
-    player.velocity.x += 1
-  }
-
-  switch (keyCode) {
-    case 37:
-      player.velocity.x -= 1
-      break
-
-    case 40:
-      player.velocity.y += 1
-      break
-
-    case 39:
-      player.velocity.x += 1
-      break
-
-    case 38:
+  if (icb.checked == false) {
+    if (keyCode === 87) {
       player.velocity.y -= 1
-      break
+    } else if (keyCode === 65) {
+      player.velocity.x -= 1
+    } else if (keyCode === 83) {
+      player.velocity.y += 1
+    } else if (keyCode === 68) {
+      player.velocity.x += 1
+    }
+  
+    switch (keyCode) {
+      case 37:
+        player.velocity.x -= 1
+        break
+  
+      case 40:
+        player.velocity.y += 1
+        break
+  
+      case 39:
+        player.velocity.x += 1
+        break
+  
+      case 38:
+        player.velocity.y -= 1
+        break
+    }
+  } else if (icb.checked == true) {
+    if (keyCode === 87) {
+      player.velocity.y += 1
+    } else if (keyCode === 65) {
+      player.velocity.x += 1
+    } else if (keyCode === 83) {
+      player.velocity.y -= 1
+    } else if (keyCode === 68) {
+      player.velocity.x -= 1
+    }
+  
+    switch (keyCode) {
+      case 37:
+        player.velocity.x += 1
+        break
+  
+      case 40:
+        player.velocity.y -= 1
+        break
+  
+      case 39:
+        player.velocity.x -= 1
+        break
+  
+      case 38:
+        player.velocity.y += 1
+        break
+    }
   }
 })
 
@@ -695,4 +783,25 @@ function getCookie(cname) {
       }
   }
 
-window.onload(checkCookie)
+function changeSettings() {
+
+gsap.to('#whiteModalEl', {
+    opacity: 0,
+    scale: 0.75,
+    duration: 0.25,
+    ease: 'expo.in',
+    onComplete: () => {
+      settingsModalEl.style.display = 'none'
+    }
+  })
+
+  modalEl.style.display = "flex"
+  gsap.to('#whiteModalEl', {
+    opacity: 1,
+    scale: 1,
+    duration: 0.45,
+    ease: 'expo'
+  })
+
+}
+
