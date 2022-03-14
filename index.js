@@ -831,3 +831,17 @@ gsap.to('#whiteModalEl', {
   })
 
 }
+
+let fps = 1;
+const times = [];
+const fpsLoop = (timestamp) => {
+  while (times.length > 0 && times[0] <= timestamp - 1000) {
+    times.shift();
+  }
+  times.push(timestamp);
+  fps = times.length;
+  document.getElementById("fps").innerHTML = fps;
+  requestAnimationFrame(fpsLoop);
+}
+
+requestAnimationFrame(fpsLoop);
