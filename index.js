@@ -17,6 +17,8 @@ const enemyHitAudio = new Audio('./audio/enemyHit.mp3')
 const enemyEliminatedAudio = new Audio('./audio/enemyEliminated.mp3')
 const obtainPowerUpAudio = new Audio('./audio/obtainPowerUp.mp3')
 const backgroundMusicAudio = new Audio('./audio/musicccc.mp3')
+const fpsc = document.getElementById("fpsc")
+const fps_holder = document.getElementById("fps_holder")
 backgroundMusicAudio.loop = true
 
 let icb = document.getElementById("ic")
@@ -832,16 +834,24 @@ gsap.to('#whiteModalEl', {
 
 }
 
-let fps = 1;
-const times = [];
-const fpsLoop = (timestamp) => {
-  while (times.length > 0 && times[0] <= timestamp - 1000) {
-    times.shift();
+fpsc.onclick = () => {
+  if (fpsc.checked) {
+    fps_holder.style.display = ""
+  } else {
+    fps_holder.style.display = "none"
   }
-  times.push(timestamp);
-  fps = times.length;
-  document.getElementById("fps").innerHTML = fps;
-  requestAnimationFrame(fpsLoop);
 }
 
-requestAnimationFrame(fpsLoop);
+let fps = 1
+const times = []
+const fpsLoop = (timestamp) => {
+  while (times.length > 0 && times[0] <= timestamp - 1000) {
+    times.shift()
+  }
+  times.push(timestamp)
+  fps = times.length
+  document.getElementById("fps").innerHTML = fps
+  requestAnimationFrame(fpsLoop)
+}
+
+requestAnimationFrame(fpsLoop)
