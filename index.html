@@ -16,7 +16,7 @@
     <span>HighScore: </span><span id="highScoreEl">0</span>
   </div>
 
-  <div class="fixed right-0 text-gray-800 text-xs ml-2 mt-1 select-none">
+  <div id="fps_holder" style="display: none;" class="fixed right-0 text-gray-800 text-xs ml-2 mt-1 select-none">
     <span>FPS: </span><span id="fps"></span>
   </div>
   
@@ -52,6 +52,9 @@
           <option id="medium">Medium</option>
           <option id="high" selected>High</option>
         </select>
+        <br>
+        <label for="fps">Show FPS: </label>
+        <input type="checkbox" id="fpsc" name="fps">
         <br>
         <label for="ic">Invert Controls: </label>
         <input type="checkbox" id="ic" name="ic">
